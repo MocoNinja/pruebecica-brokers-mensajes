@@ -3,6 +3,7 @@ package es.javierito.pruebamsgs.api;
 import es.javierito.pruebamsgs.producer.AmqProducer;
 import es.javierito.pruebamsgs.producer.JmsProducer;
 import es.javierito.pruebamsgs.producer.MqttProducer;
+import es.javierito.pruebamsgs.producer.SalutatorProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,28 +27,22 @@ public class MsgController {
 
     @PostMapping("/amqp")
     public ResponseEntity<Void> sayHelloWithAmqp() {
-        try {
-            amqProducer.sayHello();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+        return sayHello(amqProducer);
     }
 
     @PostMapping("/jms")
     public ResponseEntity<Void> sayHelloWithJms() {
-        try {
-            jmsProducer.sayHello();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.noContent().build();
+        return sayHello(jmsProducer);
     }
 
     @PostMapping("/mqtt")
     public ResponseEntity<Void> sayHelloWithMqtt() {
+        return sayHello(mqttProducer);
+    }
+
+    private ResponseEntity<Void> sayHello(final SalutatorProducer  salutatorProducer) {
         try {
-            mqttProducer.sayHello();
+            salutatorProducer.sayHello();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
