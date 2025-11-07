@@ -12,15 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/jms")
 @Profile("jms")
 public class JmsMsgController extends MsgController{
-    private SalutatorProducer salutatorProducer;
 
     public JmsMsgController(final @Qualifier("jmsProducer") SalutatorProducer salutatorProducer) {
-        this.salutatorProducer = salutatorProducer;
-    }
-
-    @PostMapping("/hello")
-    public ResponseEntity<Void> sayHelloJms() {
-        return sayHello(salutatorProducer);
+        super(salutatorProducer);
     }
 
 }

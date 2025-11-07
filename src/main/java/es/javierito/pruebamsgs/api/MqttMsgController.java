@@ -15,12 +15,7 @@ public class MqttMsgController extends MsgController{
     private SalutatorProducer salutatorProducer;
 
     public MqttMsgController(final @Qualifier("mqttProducer") SalutatorProducer salutatorProducer) {
-        this.salutatorProducer = salutatorProducer;
-    }
-
-    @PostMapping("/hello")
-    public ResponseEntity<Void> sayHelloWithMqtt() {
-        return sayHello(salutatorProducer);
+        super(salutatorProducer);
     }
 
 }
