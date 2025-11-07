@@ -11,6 +11,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 
@@ -32,7 +33,9 @@ public class MessagingConfig {
     private String password;
 
     @Bean
+    @Profile("jms")
     public ConnectionFactory jmsConnectionFactory() {
+        System.out.println("^^^^ JMS\n\n");
         final String fullUrl = "tcp://" + brokerUrl + ":" + jmsPort;
         final ActiveMQJMSConnectionFactory connectionFactory = new ActiveMQJMSConnectionFactory(fullUrl);
 
@@ -42,13 +45,9 @@ public class MessagingConfig {
         return new CachingConnectionFactory(connectionFactory);
     }
 
-    @Bean
-    public ConnectionFactory amqpConnectionFactory() {
-        final String fullUrl = "amqp://" + brokerUrl + ":" + amqpPort;
-        return new JmsConnectionFactory(user, password, fullUrl);
-    }
 
     @Bean
+    @Profile("jms")
     public JmsTemplate jmsTemplate(ConnectionFactory jmsConnectionFactory) {
         final JmsTemplate jmsTemplate = new JmsTemplate(jmsConnectionFactory);
         jmsTemplate.setSessionTransacted(true);
@@ -56,7 +55,17 @@ public class MessagingConfig {
     }
 
     @Bean
+    @Profile("amqp")
+    public ConnectionFactory amqpConnectionFactory() {
+        System.out.println("^^^^ AMQP\n\n");
+        final String fullUrl = "amqp://" + brokerUrl + ":" + amqpPort;
+        return new JmsConnectionFactory(user, password, fullUrl);
+    }
+
+    @Bean
+    @Profile("mqtt")
     public IMqttClient mqttClient() throws MqttException {
+        System.out.println("^^^^ MQTT\n\n");
         final String fullUrl = "tcp://" + brokerUrl + ":" + mqttPort;
         final String clientId = "mqtt-producer-" + UUID.randomUUID();
 

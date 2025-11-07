@@ -3,9 +3,11 @@ package es.javierito.pruebamsgs.producer;
 import jakarta.jms.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("amqp")
 public class AmqProducer implements SalutatorProducer {
 
 
